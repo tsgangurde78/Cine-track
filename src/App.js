@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+// src/App.js
+import React, { useState, useEffect } from 'react';
+import Header from './Component/Header';
+import Home from './pages/Home';
+import Watchlist from './pages/Watchlist';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const App = () => {
+  const [watchlist, setWatchlist] = useState([]);
+  const [currentPage, setCurrentPage] = useState('home');
+  const getInitialPage = () => {
+    const path = window.location.pathname;
+    if (path === '/watchlist') return 'watchlist';
+    return 'home';  // default to home if no valid path
+  };
+  
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      setCurrentPage(path === '/watchlist' ? 'watchlist' : 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  const renderPage = () => {
+    if (currentPage === 'home') {
+      return <Home watchlist={watchlist} setWatchlist={setWatchlist} />;
+    } else if (currentPage === 'watchlist') {
+      return <Watchlist watchlist={watchlist} setWatchlist={setWatchlist} />;
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header onSelectPage={setCurrentPage} />
+      {renderPage()}
     </div>
   );
-}
+};
 
 export default App;

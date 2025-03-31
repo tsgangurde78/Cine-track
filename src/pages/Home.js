@@ -19,24 +19,22 @@ const Home = ({ watchlist, setWatchlist }) => {
     }
     if (!watchlist.some(m => m.id === movie.id)) {
       setWatchlist([...watchlist, movie]);
-      setToastMessage("Movie added to watchlist");
-      setShowToast(true);
     }
   };
 
-  const filteredMovies = genre === 'All' ? moviesData : moviesData.filter(m => m.genre === genre);
+  const filteredMovies = genre === 'All movies' ? moviesData : moviesData.filter(m => m.genre.includes(genre));
 
   return (
     <Container>
 
       <div className='custom-width'> 
       <Form.Select value={genre} onChange={(e) => setGenre(e.target.value)} className="mt-3 col-sm-4">
-        <option value="All">All</option>
-        <option value="Action">Action</option>
-        <option value="Comedy">Comedy</option>
-        <option value="Drama">Drama</option>
-        <option value="Horror">Horror</option>
-        <option value="Sci-Fi">Sci-Fi</option>
+      <option>All movies</option>
+        <option >Action</option>
+        <option >Thriller</option>
+        <option >Adventure</option>
+        <option >Science Fiction</option>
+        <option>Comedy</option>
       </Form.Select>
       </div>
       <Row className='mt-4'>
@@ -48,14 +46,6 @@ const Home = ({ watchlist, setWatchlist }) => {
       <Toast
         onClose={() => setShowToast(false)}
         show={showToast}
-        delay={3000}
-        autohide
-        style={{
-          position: 'fixed',
-          top: 20,
-          right: 20,
-          minWidth: '200px',
-        }}
       >
         <Toast.Header>
           <strong className="me-auto">Notification</strong>
